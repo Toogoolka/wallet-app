@@ -5,12 +5,16 @@ import com.tugulev.wallet_app.exception.WalletNotFoundException;
 import com.tugulev.wallet_app.model.dto.OperationRequest;
 import com.tugulev.wallet_app.model.enums.OperationType;
 import com.tugulev.wallet_app.service.WalletService;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -20,11 +24,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class WalletControllerTest {
     private final static UUID WALLET_ID = UUID.fromString("1ea7b8a8-1eba-4288-a0ed-285b62b1d349");
     private final static UUID NOT_VALID_WALLET_ID = UUID.fromString("1ea7b8a8-1eba-4288-a0ed-295b62b1d349");
     private final static String GET_URI = "http://loclahost:8080/api/v1/wallets/";
     private final static String POST_URI = "http://loclahost:8080/api/v1/wallet";
+    @BeforeAll
+    public static void setUp() {
+        Dotenv dotenv = Dotenv.load();
+        System.setProperty("SPRING_DATASOURCE_URL", dotenv.get("SPRING_DATASOURCE_URL"));
+        System.setProperty("SPRING_DATASOURCE_USERNAME", dotenv.get("SPRING_DATASOURCE_USERNAME"));
+        System.setProperty("SPRING_DATASOURCE_PASSWORD", dotenv.get("SPRING_DATASOURCE_PASSWORD"));
+    }
     @Autowired
     private MockMvc mockMvc;
     @MockBean
