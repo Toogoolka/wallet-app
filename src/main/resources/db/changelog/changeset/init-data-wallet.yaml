@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: load-data-wallet
+      author: Vladislav Tugulev
+      loadData:
+        tableName: wallets
+        file: db/changelog/data/init-data.csv
+        schema: public
+        stripHeadings: true
+        separator: ","
+        typeConversion: true
